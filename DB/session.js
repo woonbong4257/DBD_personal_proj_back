@@ -5,7 +5,7 @@ var options = {
   port: 3306,
   user: 'root',
   password: '0000',
-  database: '스키마 이름',
+  database: 'bookstore',
 };
 
 var sessionStore = new MYSQLStore(options);
