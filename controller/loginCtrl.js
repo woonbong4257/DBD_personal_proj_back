@@ -9,8 +9,13 @@ exports.postLogin = async (req, res) => {
   req.session.user = user.id
   req.session.save()
   res.send("로그인 완료")
+    const checkCart = await pool.query("SELECT cart_id FROM cart WHERE user_id = ?",[user.id])
+  if(checkCart[0]<1){
+    const insertCart = await pool.query("INSERT INTO cart VALUES(null, now(), ?)",[user])
+  }
   }
   else{
     res.send("잘못 입력하셨습니다.")
   }
+  
 };

@@ -4,6 +4,5 @@ const pool = require("../DB/db")
 
 exports.getBookList = async (req, res) => {
   const bookList = await pool.query("SELECT * FROM book")
-  console.log(bookList[0])
   res.send(bookList[0])
 };
