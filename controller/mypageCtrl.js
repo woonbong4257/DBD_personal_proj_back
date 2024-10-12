@@ -1,23 +1,37 @@
 const pool = require("../DB/db");
 const { postLogin } = require("./loginCtrl");
 
-exports.getMyPage = async(req, res)=>{
-  try{const user = req.session.user;
-  const userInfo = await pool.query("SELECT * FROM user WHERE id = ?",[user])
-  const card = await pool.query(`SELECT * FROM card WHERE user_id = ?`,[user])
-  const addr = await pool.query("SELECT * FROM address WHERE user_id = ?",[user])
+exports.getMyPage = async (req, res) => {
+  try {
+    const user = req.session.user;
+    const userInfo = await pool.query("SELECT * FROM user WHERE id = ?", [user]);
+    const card = await pool.query("SELECT * FROM card WHERE user_id = ?", [user]);
+    const addr = await pool.query("SELECT * FROM address WHERE user_id = ?", [user]);
+    
+    if (card[0].length > 0 && addr[0].length > 0) {
+      res.send({
+        name: userInfo[0][0].name,
+        card: card[0],
+        addr: addr[0]
+      });
+    } 
 
+    else if (card[0].length > 0) {
+      res.send({ name: userInfo[0][0].name, card: card[0]});
+    } 
 
-  if(card[0].length > 0 && addr[0].length>0){
-    res.send([userInfo[0][0].name,card[0],addr[0]])
+    else if (addr[0].length > 0) {
+      res.send({name: userInfo[0][0].name,addr: addr[0]});
+    } 
+
+    else {
+      res.send({name: userInfo[0][0].name, message: "아직 정보가 없습니다"});
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("서버 오류");
   }
-  else{
-    res.send([userInfo[0][0].name, "아직정보가 없습니다"])
-  }}
-  catch(err){
-    console.log(err)
-  }
-}
+};
 
 exports.postCard = async(req, res)=>{
   const user = req.session.user;
