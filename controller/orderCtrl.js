@@ -21,18 +21,14 @@ exports.postOrder = async(req,res)=>{
   const selectAddrInfo = await pool.query("SELECT * FROM address WHERE addr_id = ?",[addr])
   const selectCardInfo = await pool.query("SELECT * FROM card WHERE card_id = ?",[card])
   console.log(arr)
-  /*
-  바로 구매 시 quan으로 수량 업데이트
-  장바구니 구매 시 arr[i].qunatity로 업데이트
-  */
+  
   
   if(type ==="cart"){
     const{cart_cart_id} = arr[0]
-    const insOrder = await pool.query("INSERT INTO `order` VALUES(null, now(), ?,?,?,?,?,?,?,?,?,?)",[
+    const insOrder = await pool.query("INSERT INTO `order` VALUES(null, now(), ?,?,?,?,?,?,?,?,?)",[
       total,
       quan,
       user,
-      cart_cart_id,
       selectCardInfo[0][0].company,
       selectCardInfo[0][0].card_id,
       selectCardInfo[0][0].period,
@@ -52,14 +48,14 @@ exports.postOrder = async(req,res)=>{
         arr[i].quantity,
         cost
       ])
-      const updateInven = await pool.query("UPDATE book SET inven = inven - ? WHERE book_id = ?",[arr[i].qunatity, bookId])
+      const updateInven = await pool.query("UPDATE book SET inventory = inventory - ? WHERE book_id = ?",[arr[i].quantity, bookId])
     }
     const delCartBook = await pool.query("DELETE FROM cart_list WHERE cart_cart_id = ?",[cart_cart_id])
   }
   else{
     const {id}=arr
     console.log("price: ",total, "quan: ",quan)
-    const insOrder = await pool.query("INSERT INTO `order` VALUES(null, now(), ?,?,?,null,?,?,?,?,?,?)",[
+    const insOrder = await pool.query("INSERT INTO `order` VALUES(null, now(), ?,?,?,?,?,?,?,?,?)",[
       total,
       quan,
       user,
@@ -77,6 +73,6 @@ exports.postOrder = async(req,res)=>{
         quan,
         total
       ])
-    const updateInven = await pool.query("UPDATE book SET inven = inven - ? WHERE book_id = ?",[quan, id])
+    const updateInven = await pool.query("UPDATE book SET inventory = inventory - ? WHERE book_id = ?",[quan, id])
   }
 }

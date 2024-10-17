@@ -14,6 +14,8 @@ exports.getCart = async(req, res)=>{
 exports.postCart = async(req,res)=>{
   const user = req.session.user;
   const {book ,quantity} = req.body
+  
+  
   const checkCart = await pool.query("SELECT cart_id FROM cart WHERE user_id = ?",[user])
   const selectSame = await pool.query("SELECT cart_list_id FROM cart_list WHERE cart_cart_id =? AND book_book_id =?",[checkCart[0][0].cart_id, book.id])
   if(selectSame[0].length>0){
