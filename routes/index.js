@@ -10,6 +10,7 @@ const cart = require("../controller/cartCtrl")
 const myPage = require("../controller/mypageCtrl")
 const order = require("../controller/orderCtrl")
 const orderList = require("../controller/orderListCtrl")
+const test1 = require("../controller/test1")
 
 
 router.get('/', mainCtrl.getMain); //기본주소에있는 값 받기
@@ -34,5 +35,8 @@ router.get("/order", order.getOrder);
 router.post("/order", order.postOrder);
 
 router.get("/orderlist", orderList.getOrderList)
+
+router.get("/test1", test1.getTest1)
+router.post("/test1", test1.postTest1)
 
 module.exports = router;
